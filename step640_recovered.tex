@@ -1,0 +1,98 @@
+\documentclass[10pt,twocolumn,a4paper]{article}
+ 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[top=0.8in,bottom=0.9in,left=0.65in,right=0.65in,columnsep=0.25in]{geometry}
+\usepackage{mathptmx}          % Times text and math (IEEE look)
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[font=footnotesize,labelsep=period,justification=justified,singlelinecheck=true]{caption}
+\captionsetup[table]{labelsep=newline,labelfont=sc,textfont=sc,justification=centering,skip=4pt}
+\captionsetup[figure]{name={Fig.}}
+\usepackage[hidelinks]{hyperref}
+ 
+\setlist{itemsep=1pt,topsep=3pt,parsep=0pt,leftmargin=1.4em}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\emergencystretch=2em
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+ 
+% ---- IEEE-style section headings
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+\renewcommand{\refname}{References}
+\titleformat{\section}{\centering\footnotesize\scshape}{\thesection.}{0.6em}{\MakeUppercase}
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titleformat{\subsection}{\normalsize\itshape}{\thesubsection.}{0.5em}{}
+\titlespacing*{\subsection}{0pt}{6pt}{2pt}
+\titleformat{\paragraph}[runin]{\itshape}{}{0pt}{}[.\ ]
+\titlespacing*{\paragraph}{\parindent}{4pt}{0.5em}
+ 
+\lstdefinelanguage{SPARQL}{
+  morekeywords={SELECT,WHERE,PREFIX,ASK,FILTER,ORDER,BY,SERVICE,CONTAINS,LCASE,DISTINCT},
+  sensitive=false,
+  morecomment=[l]{\#}
+}
+\lstset{
+  language=SPARQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\bfseries,
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  xleftmargin=0.3em,
+  xrightmargin=0.3em,
+  aboveskip=4pt,
+  belowskip=4pt
+}
+ 
+% Notation shortcuts
+\renewcommand{\bowtie}{\mathrel{\triangleright\!\triangleleft}}
+\newcommand{\NDTL}{\textsc{NDTL}}
+\newcommand{\SKG}{S_{\mathrm{KG}}}
+ 
+\makeatletter
+\begin{document}
+ 
+\twocolumn[{%
+\begin{@twocolumnfalse}
+\begin{center}
+{\fontsize{19}{23}\selectfont \textbf{Logic-Based Analysis of Fake News Diffusion on Social Media:}}\\[4pt]
+{\fontsize{13}{17}\selectfont Reproduction, Linear-Time Verification, and Knowledge-Graph Grounding}\\[10pt]
+{\large Keerthana V K\textsuperscript{1}\hspace{2em} Anusree S\textsuperscript{1}\hspace{2em} Sishu Shankar Muni\textsuperscript{1}}\\[4pt]
+{\small\itshape \textsuperscript{1}Kerala University of Digital Sciences, Innovations and Technology\\ (Digital University Kerala), Kerala, India}
+\end{center}
+\vspace{4pt}
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\footnotesize
+\noindent\textit{Abstract}---Formal temporal-logic approaches to fake-news detection, such as News-Diffusion Temporal Logic (\NDTL) [1], provide mathematically transparent explanations of cascade propagation but remain content-blind, which leaves them vulnerable to false alarms on viral breaking news. This paper presents an integrated framework bridging Social Network Analysis and the Semantic Web. We first perform an independent re-implementation of \NDTL, resolving a redundant path-traversal bottleneck in the reference model checker via a linear-time Breadth-First Search (BFS) evaluator that reduces verification runtime to 9.2\,ms per cascade on commodity hardware. Second, to address the content-agnostic limitation of \NDTL, we introduce a Semantic Web Knowledge Graph (KG) fact-checking engine that extracts factual assertions and queries public Wikidata and DBpedia endpoints via SPARQL, achieving an isolated fake-class precision of 96.5\% at 54.2\% recall on Twitter16. Third, we formalize diffusion cascades as W3C Linked Data using the PROV-O ontology and the SIOC vocabulary, enabling direct SPARQL querying over propagation trees. Finally, we fuse temporal diffusion dynamics with semantic signals in a symbolic-statistical hybrid classifier. Under stratified 10-fold cross-validation, the hybrid improves accuracy over our reproduced \NDTL\ baseline by 26.8 percentage points (53.7\% to 80.5\%, relative gain +49.8\%) on Twitter16 and by 18.7 percentage points (53.2\% to 71.9\%, relative gain +35.2\%) on Twitter15, while Twitter15 Fake recall decreases from 0.796 to 0.610. The proposed system provides human-interpretable structural and semantic evidence; it improves significantly over the reproduced logic baseline while remaining lightweight compared to deep sequence models.
+ 
+\vspace{4pt}
+\noindent\textit{Index Terms}---fake news detection, information diffusion, temporal logic, knowledge graph, Semantic Web, SPARQL, social network analysis.
+\end{minipage}
+\end{center}
+\vspace{10pt}
+\end{@twocolumnfalse}
+}]
+\makeatother
+ 
+%---------------------------------------------------------------------
+\section{Introduction}
+Social media networks have become the primary channel for information dissemination, yet they simultaneously facilitate the rapid propagation of fabricated, misleading, and unverified claims. Empirical studies by Vosoughi et al.~[2] demonstrate that false news diffuses significantly deeper, faster, and more broadly than truthful information.
+ 
+Conventional detection paradigms predominantly focus on content-based analysis, employing natural language processing (NLP) and large language models (LLMs) to inspect linguistic markers, emotional sentiment, and sensationalism. However, content-based approaches remain vulnerable to adversarial text perturbation, multilingual shifts, and automated generation by generative AI. Consequently, modern research has shifted toward context-based and diffusion-based approaches, which analyze the topological and temporal structures of information propagation cascades. Despite their empirical success, contemporary graph neural networks (GNNs)~[3] and deep sequence models suffer from the
